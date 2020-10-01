@@ -10,4 +10,14 @@ class Main {
             double arrivalTime = sc.nextDouble();
         }
     }
+
+    public static void getStatistics() {
+        // Statistics 1, "the average waiting time for customers who have been served"
+
+        // Statistics 2, "the number of customers served"
+        ServeEvent.getNumberOfCustomersServed();
+
+        // Statistics 3, "the number of customers who left without being served"
+        ArriveEvent.getNumberOfCustomersLeftWithoutService();
+    }
 }

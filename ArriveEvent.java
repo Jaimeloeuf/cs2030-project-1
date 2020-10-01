@@ -6,6 +6,13 @@ import java.util.Arrays;
 class ArriveEvent extends Event {
     // @todo Missing arrived time
 
+    /**
+     * private field to ensure no one else but the internal methods can modify this
+     * public getter available for this to give READ only access to external classes
+     * static variable, as this is shared across all instances of this class
+     */
+    private static int numberOfCustomersLeftWithoutService = 0;
+
     ArriveEvent(Customer customer, List<Server> servers) {
         super(customer, servers);
     }
@@ -45,11 +52,21 @@ class ArriveEvent extends Event {
 
         }
 
+        // Increment "numberOfCustomersLeftWithoutService" when the leave event is to be
+        // returned after executing this current ArriveEvent.
+        if (event instanceof LeaveEvent)
+            ++numberOfCustomersLeftWithoutService;
+
         return event;
     }
 
     @Override
     public String toString() {
         return String.format("%.3f %d arrives", super.customer.arrivalTime, super.customer.customerID);
+    }
+
+    // "numberOfCustomersLeftWithoutService" static variable Getter for statistics
+    public static int getNumberOfCustomersLeftWithoutService() {
+        return numberOfCustomersLeftWithoutService;
     }
 }
