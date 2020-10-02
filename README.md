@@ -6,6 +6,10 @@ javac *.java -d build
 javac .\Main.java -d .\build\
 java -cp .\build\ Main
 
+## Notes
+- Think of execute method, as the --> transition phase between the events.
+    - Everytime u execute, you return the next Event, which can be chained to execute.
+
 ## Test with
 1
 0.5

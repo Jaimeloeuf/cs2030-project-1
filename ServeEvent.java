@@ -12,10 +12,15 @@ class ServeEvent extends Event {
 
     // @todo Missing serve time
 
+    private final Server currentServer;
     private final double servingTime;
 
-    ServeEvent(Customer customer, List<Server> server, boolean customerWaited) {
-        super(customer, server);
+    // Should have 1 more parameter for the ID of the server for all events right,
+    // accept the first arriveEvent
+    ServeEvent(Customer customer, List<Server> servers, Server currentServer, boolean customerWaited) {
+        super(customer, servers);
+        this.currentServer = currentServer;
+
         // @todo Remove the hard coded server 0
         this.servingTime = customerWaited ? this.customer.arrivalTime : this.servers.get(0).nextAvailableTime;
     }
@@ -25,11 +30,13 @@ class ServeEvent extends Event {
         // Increment the numberOfCustomersServed once a serve event is executed
         ++numberOfCustomersServed;
 
-        //
-        this.servers.set(0, new Server(this.servers.get(0).identifier, false, this.servers.get(0).hasWaitingCustomer,
-                event.customer.arrivalTime + 1.0));
-
-        return new DoneEvent(this.customer, this.servers, this.servingTime);
+        // @todo Fix the next avail timing
+        return new DoneEvent(this.customer,
+                ServerList.updateServer(this.servers, this.currentServer.identifier,
+                        new Server(this.currentServer.identifier, !this.currentServer.hasWaitingCustomer, false,
+                                this.currentServer.hasWaitingCustomer ? this.customer.arrivalTime + 1.0
+                                        : this.customer.arrivalTime)),
+                this.servingTime);
     }
 
     @Override

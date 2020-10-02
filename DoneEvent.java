@@ -9,8 +9,8 @@ class DoneEvent extends Event {
     // Made immutable using the "final" modifier
     public final double servingTime;
 
-    DoneEvent(Customer customer, List<Server> server, double servingTime) {
-        super(customer, server);
+    DoneEvent(Customer customer, List<Server> servers, double servingTime) {
+        super(customer, servers);
         this.servingTime = servingTime;
     }
 

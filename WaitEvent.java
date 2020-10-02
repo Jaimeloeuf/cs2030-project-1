@@ -5,13 +5,21 @@ import java.util.List;
 class WaitEvent extends Event {
     // @todo Missing wait time
 
-    WaitEvent(Customer customer, List<Server> server) {
-        super(customer, server);
+    private final Server currentServer;
+
+    WaitEvent(Customer customer, List<Server> servers, Server currentServer) {
+        super(customer, servers);
+        this.currentServer = currentServer;
     }
 
     @Override
     public Event execute() {
-        return new ServeEvent(this.customer, this.servers, false);
+        return new ServeEvent(this.customer,
+                ServerList.updateServer(this.servers, currentServer.identifier,
+                        new Server(this.currentServer.identifier,
+                                // @todo Dunnid to udpate nxt time right, since the arrive event alr added to it
+                                false, false, this.currentServer.nextAvailableTime)),
+                currentServer, true);
     }
 
     @Override
