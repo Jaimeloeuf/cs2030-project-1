@@ -14,12 +14,11 @@ class WaitEvent extends Event {
 
     @Override
     public Event execute() {
-        return new ServeEvent(this.customer,
-                ServerList.updateServer(this.servers, currentServer.identifier,
-                        new Server(this.currentServer.identifier,
-                                // @todo Dunnid to udpate nxt time right, since the arrive event alr added to it
-                                false, false, this.currentServer.nextAvailableTime)),
-                currentServer, true);
+        // need to change next avail timing?
+        ServerList.updateServer(this.servers, this.currentServer.identifier, new Server(this.currentServer.identifier,
+                this.currentServer.isAvailable, true, this.currentServer.nextAvailableTime + 1.0));
+
+        return new ServeEvent(this.customer, this.servers, currentServer, true);
     }
 
     @Override

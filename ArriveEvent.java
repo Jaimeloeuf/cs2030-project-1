@@ -16,23 +16,13 @@ class ArriveEvent extends Event {
     public Event execute() {
         final Server nextAvailableServer = ServerList.getNextAvailableServer(this.servers);
         if (nextAvailableServer != null)
-            return new ServeEvent(this.customer,
-                    ServerList
-                            .updateServer(this.servers, nextAvailableServer.identifier,
-                                    new Server(nextAvailableServer.identifier, false,
-                                            nextAvailableServer.hasWaitingCustomer, this.customer.arrivalTime + 1.0)),
-                    nextAvailableServer, true);
+            return new ServeEvent(this.customer, this.servers, nextAvailableServer, true);
 
         // @todo Should nxt avail time be + 2.0? or jjust a plus 1, ...
         // plus 1
         final Server nextAvailableQueueServer = ServerList.getnextAvailableQueueServer(this.servers);
         if (nextAvailableQueueServer != null)
-            return new WaitEvent(this.customer,
-                    ServerList.updateServer(this.servers, nextAvailableQueueServer.identifier,
-                            new Server(nextAvailableQueueServer.identifier, nextAvailableQueueServer.isAvailable, true,
-                                    // need to change next avail timing?
-                                    nextAvailableQueueServer.nextAvailableTime + 1.0)),
-                    nextAvailableQueueServer);
+            return new WaitEvent(this.customer, this.servers, nextAvailableQueueServer);
 
         return new LeaveEvent(this.customer, this.servers);
     }

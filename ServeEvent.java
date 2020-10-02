@@ -14,6 +14,7 @@ class ServeEvent extends Event {
 
     private final Server currentServer;
     private final double servingTime;
+    private final boolean customerWaited;
 
     // Should have 1 more parameter for the ID of the server for all events right,
     // accept the first arriveEvent
@@ -22,6 +23,8 @@ class ServeEvent extends Event {
         this.currentServer = currentServer;
 
         // @todo Remove the hard coded server 0
+        // @todo fix serving time
+        this.customerWaited = customerWaited;
         this.servingTime = customerWaited ? this.customer.arrivalTime : this.servers.get(0).nextAvailableTime;
     }
 
@@ -30,13 +33,10 @@ class ServeEvent extends Event {
         // Increment the numberOfCustomersServed once a serve event is executed
         ++numberOfCustomersServed;
 
-        // @todo Fix the next avail timing
-        return new DoneEvent(this.customer,
-                ServerList.updateServer(this.servers, this.currentServer.identifier,
-                        new Server(this.currentServer.identifier, !this.currentServer.hasWaitingCustomer, false,
-                                this.currentServer.hasWaitingCustomer ? this.customer.arrivalTime + 1.0
-                                        : this.customer.arrivalTime)),
-                this.servingTime);
+        ServerList.updateServer(this.servers, this.currentServer.identifier, new Server(this.currentServer.identifier,
+                false, !this.customerWaited, this.customer.arrivalTime + 1.0));
+
+        return new DoneEvent(this.customer, this.servers, this.currentServer, this.servingTime);
     }
 
     @Override
