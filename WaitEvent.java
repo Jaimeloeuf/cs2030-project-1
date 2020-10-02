@@ -11,12 +11,12 @@ class WaitEvent extends Event {
 
     @Override
     public Event execute() {
-        return new ServeEvent(super.customer, super.servers, false);
+        return new ServeEvent(this.customer, this.servers, false);
     }
 
     @Override
     public String toString() {
-        return String.format("%.3f %d waits to be served by %d", super.customer.arrivalTime, super.customer.customerID,
-                super.servers.get(0).identifier);
+        return String.format("%.3f %d waits to be served by %d", this.customer.arrivalTime, this.customer.customerID,
+                this.servers.get(0).identifier);
     }
 }

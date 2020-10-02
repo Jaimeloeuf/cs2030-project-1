@@ -17,22 +17,25 @@ class ArriveEvent extends Event {
         super(customer, servers);
     }
 
+    /**
+     * @return New event to be executed after this arrive event
+     */
     @Override
     public Event execute() {
         Event event = null;
 
         // Loop through all servers
-        for (int i = 0; i < super.servers.size(); i++) {
-            switch (super.servers.get(i).status()) {
+        for (int i = 0; i < this.servers.size(); i++) {
+            switch (this.servers.get(i).status()) {
                 case available:
                     // If it any of the servers are available, use it immediately and break out of
                     // the loop
-                    return new ServeEvent(super.customer, Arrays.asList(super.servers.get(i)), true);
+                    return new ServeEvent(this.customer, Arrays.asList(this.servers.get(i)), true);
                 case queueAvailable:
                     // If there is a server with a available queue spot, store this event first, but
                     // dont use it yet, to see if the next server have a better option of a
                     // available status
-                    event = new WaitEvent(super.customer, Arrays.asList(super.servers.get(i)));
+                    event = new WaitEvent(this.customer, Arrays.asList(this.servers.get(i)));
                     break;
                 case full:
                     // Store this event first, and overwrite it, if there is a available or
@@ -40,7 +43,7 @@ class ArriveEvent extends Event {
                     // But if there is a WaitEvent currenty stored, DO NOT overwrite it. Only
                     // overwrite if there is no other events stored
                     if (!(event instanceof WaitEvent))
-                        event = new LeaveEvent(super.customer, Arrays.asList(super.servers.get(i)));
+                        event = new LeaveEvent(this.customer, Arrays.asList(this.servers.get(i)));
                     break;
 
                 // Technically this is not be needed since this.status() is GARUNTEED to return
@@ -62,7 +65,7 @@ class ArriveEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f %d arrives", super.customer.arrivalTime, super.customer.customerID);
+        return String.format("%.3f %d arrives", this.customer.arrivalTime, this.customer.customerID);
     }
 
     // "numberOfCustomersLeftWithoutService" static variable Getter for statistics
