@@ -13,19 +13,23 @@ class ServeEvent extends Event {
     // @todo Missing serve time
 
     private final Server currentServer;
-    private final double servingTime;
+    // private final double servingTime;
     private final boolean customerWaited;
 
     // Should have 1 more parameter for the ID of the server for all events right,
     // accept the first arriveEvent
-    ServeEvent(Customer customer, List<Server> servers, Server currentServer, boolean customerWaited) {
+    ServeEvent(Customer customer, List<Server> servers, Server currentServer, double eventStartTime,
+            boolean customerWaited) {
         super(customer, servers);
         this.currentServer = currentServer;
+        this.startTime = eventStartTime;
 
         // @todo Remove the hard coded server 0
         // @todo fix serving time
         this.customerWaited = customerWaited;
-        this.servingTime = customerWaited ? this.customer.arrivalTime : this.servers.get(0).nextAvailableTime;
+        // hard code 1.0 additon since each cycle is 1.0 seconds
+        // this.servingTime = customerWaited ? this.customer.arrivalTime + 1.0 :
+        // this.customer.arrivalTime;
     }
 
     @Override
@@ -33,16 +37,19 @@ class ServeEvent extends Event {
         // Increment the numberOfCustomersServed once a serve event is executed
         ++numberOfCustomersServed;
 
-        ServerList.updateServer(this.servers, this.currentServer.identifier, new Server(this.currentServer.identifier,
-                false, !this.customerWaited, this.customer.arrivalTime + 1.0));
+        ServerList.updateServer(this.servers, this.currentServer.identifier,
+                new Server(this.currentServer.identifier, false, this.currentServer.hasWaitingCustomer,
+                        !this.currentServer.hasWaitingCustomer ? this.startTime + 1.0 : this.startTime + 2.0));
+        // this.startTime + 1.0));
 
-        return new DoneEvent(this.customer, this.servers, this.currentServer, this.servingTime);
+        // Hardcoded 1.0 as each serving event takes "1 sec" to execute
+        return new DoneEvent(this.customer, this.servers, this.currentServer, this.startTime + 1.0);
     }
 
     @Override
     public String toString() {
-        return String.format("%.3f %d served by %d", this.servingTime, this.customer.customerID,
-                this.servers.get(0).identifier);
+        return String.format("%.3f %d served by %d", this.startTime, this.customer.customerID,
+                this.currentServer.identifier);
     }
 
     // "numberOfCustomersServed" static variable Getter for statistics needed

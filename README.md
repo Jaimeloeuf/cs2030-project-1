@@ -1,14 +1,13 @@
 # CS2030 Java Project
 My attempt of this project. [Ques is a html page](./Ques)
 
-## Build with
-javac *.java -d build
-javac .\Main.java -d .\build\
-java -cp .\build\ Main
+## Build and run with
+javac *.java -d build;
+javac .\Main.java -d .\build\;
+java -cp .\build\ Main;
 
 ## Notes
-- Think of execute method, as the --> transition phase between the events.
-    - Everytime u execute, you return the next Event, which can be chained to execute.
+- execute updates the state of the servers, and returns a new event to be chained / added to queue to operate
 
 ## Test with
 1

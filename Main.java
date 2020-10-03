@@ -102,19 +102,19 @@ class Main {
     }
 }
 
-// comparison that returns smaller arrival time of customer as priority
+// comparison that returns earlier event startTime as priority
 class Comparison implements Comparator<Event> {
     @Override
     public int compare(Event a, Event b) {
 
         // If their time differs
-        if (a.customer.arrivalTime < b.customer.arrivalTime)
+        if (a.startTime < b.startTime)
             return -1;
-        else if (a.customer.arrivalTime > b.customer.arrivalTime)
+        else if (a.startTime > b.startTime)
             return 1;
 
         // if they have the same arrival time, check the customerID
-        else if (a.customer.arrivalTime == b.customer.arrivalTime)
+        else if (a.startTime == b.startTime)
             if (a.customer.customerID < b.customer.customerID)
                 return -1;
             else

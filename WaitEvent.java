@@ -7,23 +7,26 @@ class WaitEvent extends Event {
 
     private final Server currentServer;
 
-    WaitEvent(Customer customer, List<Server> servers, Server currentServer) {
+    WaitEvent(Customer customer, List<Server> servers, Server currentServer, double eventStartTime) {
         super(customer, servers);
         this.currentServer = currentServer;
+        this.startTime = eventStartTime;
     }
 
     @Override
     public Event execute() {
         // need to change next avail timing?
+        // Technically can hard code false for isAvailable
         ServerList.updateServer(this.servers, this.currentServer.identifier, new Server(this.currentServer.identifier,
-                this.currentServer.isAvailable, true, this.currentServer.nextAvailableTime + 1.0));
+                this.currentServer.isAvailable, true, this.currentServer.nextAvailableTime));
 
-        return new ServeEvent(this.customer, this.servers, currentServer, true);
+        // @todo why this the nxt availb time is a arrivalTime + 1.0??
+        return new ServeEvent(this.customer, this.servers, currentServer, this.currentServer.nextAvailableTime, true);
     }
 
     @Override
     public String toString() {
         return String.format("%.3f %d waits to be served by %d", this.customer.arrivalTime, this.customer.customerID,
-                this.servers.get(0).identifier);
+                this.currentServer.identifier);
     }
 }

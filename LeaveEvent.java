@@ -12,8 +12,9 @@ class LeaveEvent extends Event {
      */
     private static int numberOfCustomersLeftWithoutService = 0;
 
-    LeaveEvent(Customer customer, List<Server> servers) {
+    LeaveEvent(Customer customer, List<Server> servers, double eventStartTime) {
         super(customer, servers);
+        this.startTime = eventStartTime;
 
         // Increment "numberOfCustomersLeftWithoutService" tracking how many left
         ++numberOfCustomersLeftWithoutService;

@@ -9,6 +9,12 @@ abstract class Event {
     public final Customer customer;
     public final List<Server> servers;
 
+    // This value will be set in execute method, using the servers list, next
+    // available time value
+    // @todo How to make this immutable?
+    //
+    public double startTime;
+
     Event(Customer customer, List<Server> servers) {
         this.customer = customer;
         this.servers = servers;
