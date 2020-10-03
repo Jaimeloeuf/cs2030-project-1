@@ -15,21 +15,17 @@ abstract class Event {
     //
     public double startTime;
 
+    // Field to hold a reference to the current server object.
+    // Set --> this.currentServer = ServerList.getServerByID(servers, serverID);
+    public Server currentServer;
+
     Event(Customer customer, List<Server> servers) {
         this.customer = customer;
         this.servers = servers;
     }
 
-    // Default method that can be overriden to suit the different events
-    // If not overriden, provides a default NOOP method in place to prevent calling
-    // on unimplemented method
-    public Event execute() {
-        // Not throwing the "UnimplementedMethodException" as some events can choose to
-        // leave this unimplemented but still want to have the method on its class to be
-        // called by a generic event caller
-        return null;
-    }
+    /* Abstract methods to be implemented by the specific concrete Event classes */
+    public abstract Event execute();
 
-    // Abstract method to be implemented by the specific concrete Event classes
     public abstract String toString();
 }

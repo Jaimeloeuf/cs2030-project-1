@@ -3,8 +3,6 @@
 import java.util.List;
 
 class LeaveEvent extends Event {
-    // @todo Missing leave time
-
     /**
      * private field to ensure no one else but the internal methods can modify this
      * public getter available for this to give READ only access to external classes
@@ -15,14 +13,21 @@ class LeaveEvent extends Event {
     LeaveEvent(Customer customer, List<Server> servers, double eventStartTime) {
         super(customer, servers);
         this.startTime = eventStartTime;
+    }
 
+    /**
+     * Only update the "number of customers left without service" on execute
+     */
+    @Override
+    public Event execute() {
         // Increment "numberOfCustomersLeftWithoutService" tracking how many left
         ++numberOfCustomersLeftWithoutService;
+        return null;
     }
 
     @Override
     public String toString() {
-        return String.format("%.3f %d leaves", this.customer.arrivalTime, this.customer.customerID);
+        return String.format("%.3f %d leaves", this.startTime, this.customer.customerID);
     }
 
     // "numberOfCustomersLeftWithoutService" static variable Getter for statistics

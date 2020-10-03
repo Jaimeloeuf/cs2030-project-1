@@ -1,10 +1,10 @@
 import java.util.List;
 
-// The other way to use this, is to create a new one every single time, then use already, replace your original serverList with this internal one. Then move on...
-
-// Or if not just extenrlize the methods, then access them as functions, passing in the full ServerList for every single Call.
-// So that they will modify our serverList for us and yea!
 class ServerList {
+
+    public static Server getServerByID(List<Server> serverList, int serverID) {
+        return serverList.stream().filter(server -> server.identifier == serverID).findAny().orElse(null);
+    }
 
     // Return a server that is available
     public static Server getNextAvailableServer(List<Server> serverList) {

@@ -10,18 +10,12 @@ class ServeEvent extends Event {
      */
     private static int numberOfCustomersServed = 0;
 
-    // @todo Missing serve time
-
-    private final Server currentServer;
     // private final double servingTime;
     private final boolean customerWaited;
 
-    // Should have 1 more parameter for the ID of the server for all events right,
-    // accept the first arriveEvent
-    ServeEvent(Customer customer, List<Server> servers, Server currentServer, double eventStartTime,
-            boolean customerWaited) {
+    ServeEvent(Customer customer, List<Server> servers, int serverID, double eventStartTime, boolean customerWaited) {
         super(customer, servers);
-        this.currentServer = currentServer;
+        this.currentServer = ServerList.getServerByID(servers, serverID);
         this.startTime = eventStartTime;
 
         // @todo Remove the hard coded server 0
@@ -37,13 +31,21 @@ class ServeEvent extends Event {
         // Increment the numberOfCustomersServed once a serve event is executed
         ++numberOfCustomersServed;
 
-        ServerList.updateServer(this.servers, this.currentServer.identifier,
-                new Server(this.currentServer.identifier, false, this.currentServer.hasWaitingCustomer,
-                        !this.currentServer.hasWaitingCustomer ? this.startTime + 1.0 : this.startTime + 2.0));
-        // this.startTime + 1.0));
+        /*
+         * Update current server on execute.
+         * 
+         * Current server is
+         */
+        this.currentServer = new Server(this.currentServer.identifier, false, false,
+                this.currentServer.nextAvailableTime + 1.0);
+        // new Server(this.currentServer.identifier, false, false,
+        // this.customer.arrivalTime + 1.0);
 
-        // Hardcoded 1.0 as each serving event takes "1 sec" to execute
-        return new DoneEvent(this.customer, this.servers, this.currentServer, this.startTime + 1.0);
+        // Save updated server back into ServerList
+        ServerList.updateServer(this.servers, this.currentServer.identifier, this.currentServer);
+
+        // Hardcoded 1.0 DoneEvent startTime as serving event takes "1 sec" to execute
+        return new DoneEvent(this.customer, this.servers, this.currentServer.identifier, this.startTime + 1.0);
     }
 
     @Override

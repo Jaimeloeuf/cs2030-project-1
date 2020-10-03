@@ -3,35 +3,26 @@
 import java.util.List;
 
 class DoneEvent extends Event {
-    // @todo Store time when it is done
-
-    // Blank final variables to be assigned in the constructor
-    // Made immutable using the "final" modifier
-    private final Server currentServer;
-
-    DoneEvent(Customer customer, List<Server> servers, Server currentServer, double eventStartTime) {
+    DoneEvent(Customer customer, List<Server> servers, int serverID, double eventStartTime) {
         super(customer, servers);
-        this.currentServer = currentServer;
+        this.currentServer = ServerList.getServerByID(servers, serverID);
         this.startTime = eventStartTime;
     }
 
     @Override
     public Event execute() {
+        /*
+         * Update current server on execute.
+         * 
+         * This is the "someone in queue but not served yet" config
+         */
+        this.currentServer = new Server(this.currentServer.identifier, false, this.currentServer.hasWaitingCustomer,
+                !this.currentServer.hasWaitingCustomer ? this.startTime : this.startTime + 1.0);
 
-        System.out.printf("%s %s %.3f\n", this.currentServer.status(), this.currentServer.hasWaitingCustomer,
-                this.currentServer.nextAvailableTime);
+        // Save updated server back into ServerList
+        ServerList.updateServer(this.servers, this.currentServer.identifier, this.currentServer);
 
-        // @todo Fix the next avail timing
-        // Actually how to see pass this server to the nxt event??
-        // WHen a done event is executed, the server should be updated
-        // from full to queueAvailable
-        // from queueAvailable to available
-        ServerList.updateServer(this.servers, this.currentServer.identifier,
-                new Server(this.currentServer.identifier, !this.currentServer.hasWaitingCustomer, false,
-                        !this.currentServer.hasWaitingCustomer ? this.startTime : this.startTime + 1.0));
-
-        System.out.printf("%s\n", this.currentServer.status());
-
+        // Return null as DoneEvent is the last event in event transitions
         return null;
     }
 
