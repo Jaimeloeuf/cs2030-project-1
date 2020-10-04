@@ -27,7 +27,20 @@ class ServeEvent extends Event {
         /*
          * Update current server on execute.
          * 
-         * Current server is
+         * The only events that can execute in sequence before this event, is
+         * ArriveEvent and DoneEvent, EVEN THOUGH the Event subclasses execute methods
+         * that can INSTANTIATE AND RETURN ServeEvent is ArriveEvent and WaitEvent.
+         * 
+         * By chaining, I mean the flow of execution. So which event executed right
+         * before this event.
+         * 
+         * If chained from ArriveEvent, the status of the current server will be
+         * "available", then this method will update the server's status to
+         * "queueAvailable", by setting "isAvailable" to true.
+         * 
+         * If chained from DoneEvent, the status of the current server will be
+         * "queueAvailable", then this method WILL NOT UPDATE the server's status, since
+         * it is already all set as it should be.'
          */
         currentServer = new Server(currentServer.identifier, false, false, this.startTime + 1.0);
 

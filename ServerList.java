@@ -1,5 +1,13 @@
 import java.util.List;
 
+/**
+ * Utility class with static methods for a more project specific interface to
+ * the ServerList for easy reuse.
+ * 
+ * These methods will directly mutate the original serverList if needed. Since
+ * the serverList is a pointer/reference, modifying objects in the list, will be
+ * reflected in all code that have a reference to the server list.
+ */
 class ServerList {
 
     /**

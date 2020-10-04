@@ -8,56 +8,44 @@ class Main {
     public static void main(String[] args) {
         final Scanner sc = new Scanner(System.in);
 
-        //
+        /**
+         * So there is a pointer/reference, pointing to the List of servers.
+         * 
+         * Everytime I create a new ArriveEvent and pass it the List of servers, I am
+         * passing its pointer BY VALUE to the new event object. However since the
+         * parameter passed is actually a pointer, modifying/replacing Server Objects in
+         * the List will actually still modify the original Servers List.
+         * 
+         * This means that, EVERY SINGLE EVENT object will ALWAYS have a reference to
+         * the same Servers List, and any of them modifying any Server Object in the
+         * List, modify the objects in the List.
+         * 
+         * Thus, EVERY OTHER EVENT, can access the updated Server Objects in the List.
+         * Specifically through the "ServerList.getServerByID" static method.
+         */
+
         List<Server> servers = new ArrayList<Server>();
-        List<Customer> customers = new ArrayList<Customer>();
+
+        // List to store all the events as strings to output after simulation
         List<String> schedule = new ArrayList<String>();
-
-        final int numOfServers = sc.nextInt();
-
-        // Customer ID starts from 1
-        int customerID = 1;
-
-        // Create the list of servers at the start using the first user input
-        // Server ID starts from 1
-        for (int i = 1; i <= numOfServers; i++)
-            // WRONG --> Server starts with being available with no one waiting and start
-            // time of 1.0
-            servers.add(new Server(i, true, false, 0));
-
-        // Read user input 1 by 1, and create+store the customer objects
-        while (sc.hasNextDouble()) {
-            // Create customer with incrementing customer ID
-            customers.add(new Customer(customerID++, sc.nextDouble()));
-            System.out.println(customers.toString());
-        }
-
-        // Explicitly close scanner to prevent resource leak
-        sc.close();
 
         // @todo Remove hardcoded initial capacity
         // 11 following the default value of the class
         PriorityQueue<Event> queue = new PriorityQueue<Event>(11, new Comparison());
 
-        /**
-         * So there is a pointer/reference, pointing to the ArrayList of servers.
-         * 
-         * Everytime I create a new ArriveEvent and pass it the ArrayList of servers, I
-         * am passing its pointer BY VALUE to the new event object. However since the
-         * parameter passed is actually a pointer, modifying/replacing Server Objects in
-         * the ArrayList will actually still modify the original Servers ArrayList.
-         * 
-         * This means that, EVERY SINGLE EVENT object will ALWAYS have a reference to
-         * the same Servers ArrayList, and any of them modifying any Server Object in
-         * the List modify the objects in the ArrayList defined HERE.
-         * 
-         * Thus, EVERY OTHER EVENT, will also be able to access the updated Server
-         * Objects in the ArrayList
-         */
+        // Create list of servers at the start using the first user input
+        // Server ID starts from 1
+        for (int i = 1, numOfServers = sc.nextInt(); i <= numOfServers; i++)
+            servers.add(new Server(i, true, false, 0));
 
-        // Insert Arrive event for all the customers into the Queue
-        for (int i = 0; i < customers.size(); i++)
-            queue.add(new ArriveEvent(customers.get(i), servers));
+        // Customer ID starts from 1
+        // Read user input 1 by 1, and create a customer object, before
+        // Inserting an Arrive event into Queue for every customer
+        for (int customerID = 1; sc.hasNextDouble(); customerID++)
+            queue.add(new ArriveEvent(new Customer(customerID, sc.nextDouble()), servers));
+
+        // Explicitly close scanner to prevent resource leak
+        sc.close();
 
         // Loop to simulate running through all the events.
         while (!queue.isEmpty()) {
@@ -70,16 +58,19 @@ class Main {
             else
                 queue.add(event.execute());
 
-            //
+            // Add the string representation of each event after execution into the schedule
+            // List to be displayed after simulation completes.
             schedule.add(event.toString());
         }
 
-        // Sort schedule by execution time
-        // Wait what how does this sort it by that...
+        // Sort schedule by execution time (the first number in each string)
         Collections.sort(schedule);
+
+        // Print the string representation of the entire simulation
         for (String schedules : schedule)
             System.out.println(schedules);
 
+        // Get and print the statistics of the simulation.
         getStatistics();
     }
 
