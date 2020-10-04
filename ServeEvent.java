@@ -10,20 +10,10 @@ class ServeEvent extends Event {
      */
     private static int numberOfCustomersServed = 0;
 
-    // private final double servingTime;
-    private final boolean customerWaited;
-
-    ServeEvent(Customer customer, List<Server> servers, int serverID, double eventStartTime, boolean customerWaited) {
+    ServeEvent(Customer customer, List<Server> servers, int serverID, double eventStartTime) {
         super(customer, servers);
         this.serverID = serverID;
         this.startTime = eventStartTime;
-
-        // @todo Remove the hard coded server 0
-        // @todo fix serving time
-        this.customerWaited = customerWaited;
-        // hard code 1.0 additon since each cycle is 1.0 seconds
-        // this.servingTime = customerWaited ? this.customer.arrivalTime + 1.0 :
-        // this.customer.arrivalTime;
     }
 
     @Override

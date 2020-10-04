@@ -34,7 +34,7 @@ class WaitEvent extends Event {
         // Save updated server back into ServerList
         ServerList.updateServer(this.servers, currentServer.identifier, currentServer);
 
-        return new ServeEvent(this.customer, this.servers, this.serverID, currentServer.nextAvailableTime, true);
+        return new ServeEvent(this.customer, this.servers, this.serverID, currentServer.nextAvailableTime);
     }
 
     @Override

@@ -24,7 +24,7 @@ class ArriveEvent extends Event {
         final Server nextAvailableServer = ServerList.getNextAvailableServer(this.servers);
         if (nextAvailableServer != null)
             // ServeEvent will make server from available to queueAvailable
-            return new ServeEvent(this.customer, this.servers, nextAvailableServer.identifier, this.startTime, false);
+            return new ServeEvent(this.customer, this.servers, nextAvailableServer.identifier, this.startTime);
 
         // Get next server with available queue, and return a WaitEvent if exists
         final Server nextAvailableQueueServer = ServerList.getnextAvailableQueueServer(this.servers);
