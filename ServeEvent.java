@@ -9,6 +9,7 @@ class ServeEvent extends Event {
      * static variable, as this is shared across all instances of this class
      */
     private static int numberOfCustomersServed = 0;
+    private static double totalWaitingTime = 0.0;
 
     ServeEvent(Customer customer, List<Server> servers, int serverID, double eventStartTime) {
         super(customer, servers);
@@ -23,6 +24,9 @@ class ServeEvent extends Event {
 
         // Get the currentServer from the ServerList using ID
         Server currentServer = ServerList.getServerByID(this.servers, this.serverID);
+
+        // Add waiting time to total waiting time for statistics 1.
+        totalWaitingTime += this.startTime - this.customer.arrivalTime;
 
         /*
          * Update current server on execute.
@@ -59,5 +63,10 @@ class ServeEvent extends Event {
     // "numberOfCustomersServed" static variable Getter for statistics needed
     public static int getNumberOfCustomersServed() {
         return numberOfCustomersServed;
+    }
+
+    // "numberOfCustomersServed" static variable Getter for statistics needed
+    public static double getTotalWaitingTime() {
+        return totalWaitingTime;
     }
 }

@@ -76,7 +76,7 @@ class Main {
 
     public static void getStatistics() {
         // Statistics 1, "the average waiting time for customers who have been served"
-        final double stat1 = ServeEvent.getNumberOfCustomersServed();
+        final double stat1 = ServeEvent.getTotalWaitingTime() / ServeEvent.getNumberOfCustomersServed();
 
         // Statistics 2, "the number of customers served"
         final int stat2 = ServeEvent.getNumberOfCustomersServed();
