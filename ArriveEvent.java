@@ -9,6 +9,9 @@ class ArriveEvent extends Event {
     }
 
     /**
+     * This Event's execute method does not modify any Server state. It only creates
+     * the next event to chain depending on the availability of the servers.
+     * 
      * The startTime of the next event, be it Serve OR Wait OR Leave, will always be
      * the same as this event's startTime. Since the next event should be executed
      * right after this event is executed.
@@ -35,6 +38,6 @@ class ArriveEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f %d arrives", this.customer.arrivalTime, this.customer.customerID);
+        return String.format("%.3f %d arrives", this.startTime, this.customer.customerID);
     }
 }

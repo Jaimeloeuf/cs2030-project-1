@@ -15,7 +15,7 @@ class ServeEvent extends Event {
 
     ServeEvent(Customer customer, List<Server> servers, int serverID, double eventStartTime, boolean customerWaited) {
         super(customer, servers);
-        this.currentServer = ServerList.getServerByID(servers, serverID);
+        this.serverID = serverID;
         this.startTime = eventStartTime;
 
         // @todo Remove the hard coded server 0
@@ -31,27 +31,26 @@ class ServeEvent extends Event {
         // Increment the numberOfCustomersServed once a serve event is executed
         ++numberOfCustomersServed;
 
+        // Get the currentServer from the ServerList using ID
+        Server currentServer = ServerList.getServerByID(this.servers, this.serverID);
+
         /*
          * Update current server on execute.
          * 
          * Current server is
          */
-        this.currentServer = new Server(this.currentServer.identifier, false, false,
-                this.currentServer.nextAvailableTime + 1.0);
-        // new Server(this.currentServer.identifier, false, false,
-        // this.customer.arrivalTime + 1.0);
+        currentServer = new Server(currentServer.identifier, false, false, this.startTime + 1.0);
 
         // Save updated server back into ServerList
-        ServerList.updateServer(this.servers, this.currentServer.identifier, this.currentServer);
+        ServerList.updateServer(this.servers, currentServer.identifier, currentServer);
 
         // Hardcoded 1.0 DoneEvent startTime as serving event takes "1 sec" to execute
-        return new DoneEvent(this.customer, this.servers, this.currentServer.identifier, this.startTime + 1.0);
+        return new DoneEvent(this.customer, this.servers, this.serverID, this.startTime + 1.0);
     }
 
     @Override
     public String toString() {
-        return String.format("%.3f %d served by %d", this.startTime, this.customer.customerID,
-                this.currentServer.identifier);
+        return String.format("%.3f %d served by %d", this.startTime, this.customer.customerID, this.serverID);
     }
 
     // "numberOfCustomersServed" static variable Getter for statistics needed

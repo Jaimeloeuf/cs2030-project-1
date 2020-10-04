@@ -5,40 +5,41 @@ import java.util.List;
 class WaitEvent extends Event {
     WaitEvent(Customer customer, List<Server> servers, int serverID, double eventStartTime) {
         super(customer, servers);
-        this.currentServer = ServerList.getServerByID(servers, serverID);
+        this.serverID = serverID;
         this.startTime = eventStartTime;
     }
 
-    /**
-     * This event's execute always turns current server from queueAvailable to full
-     */
     @Override
     public Event execute() {
+        // Get the currentServer from the ServerList using ID
+        Server currentServer = ServerList.getServerByID(this.servers, this.serverID);
+
         /*
          * Update current server on execute.
          * 
          * Current server IS UNAVAILABLE with a waiting queue, for waitEvent to be
-         * returned by ArriveEvent's execute.
+         * returned by ArriveEvent's execute. Meaning status of current server is always
+         * "queueAvailable", and this execute method will update its status to "full",
+         * by setting "hasWaitingCustomer" to true on the current server.
          * 
-         * Thus this Waiting execute updates server to "hasWaitingCustomer"
-         *
          * "nextAvailableTime" is not updated, since it should stay the same, just that
          * now, instead of being next available at X, it is now available to serve this
          * waiting customer at X.
          */
-        this.currentServer = new Server(this.currentServer.identifier, false, true,
-                this.currentServer.nextAvailableTime);
+        // currentServer = new Server(currentServer.identifier, false, true,
+        // currentServer.nextAvailableTime);
+        currentServer = new Server(currentServer.identifier, currentServer.isAvailable, true,
+                currentServer.nextAvailableTime);
 
         // Save updated server back into ServerList
-        ServerList.updateServer(this.servers, this.currentServer.identifier, this.currentServer);
+        ServerList.updateServer(this.servers, currentServer.identifier, currentServer);
 
-        return new ServeEvent(this.customer, this.servers, this.currentServer.identifier,
-                this.currentServer.nextAvailableTime, true);
+        return new ServeEvent(this.customer, this.servers, this.serverID, currentServer.nextAvailableTime, true);
     }
 
     @Override
     public String toString() {
-        return String.format("%.3f %d waits to be served by %d", this.customer.arrivalTime, this.customer.customerID,
-                this.currentServer.identifier);
+        return String.format("%.3f %d waits to be served by %d", this.startTime, this.customer.customerID,
+                this.serverID);
     }
 }

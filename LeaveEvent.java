@@ -16,7 +16,8 @@ class LeaveEvent extends Event {
     }
 
     /**
-     * Only update the "number of customers left without service" on execute
+     * Update "number of customers left without service" on execute, without
+     * updating and server state nor returning any more events to execute next.
      */
     @Override
     public Event execute() {

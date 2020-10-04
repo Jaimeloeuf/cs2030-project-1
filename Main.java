@@ -63,8 +63,6 @@ class Main {
         // Loop to simulate running through all the events.
         while (!queue.isEmpty()) {
             final Event event = queue.poll();
-            System.out.printf("event: %s %s\n", event.getClass().toString(), event.toString());
-            System.out.printf("servers status before execute: %s\n", servers.toString());
 
             // Only for DoneEvent and LeaveEvent, where their execute methods are not
             // expected to return anymore new events, do we skip adding new events.
@@ -72,8 +70,6 @@ class Main {
                 event.execute();
             else
                 queue.add(event.execute());
-
-            System.out.printf("servers status after execute: %s\n", servers.toString());
 
             //
             schedule.add(event.toString());

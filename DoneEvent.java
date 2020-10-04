@@ -5,22 +5,32 @@ import java.util.List;
 class DoneEvent extends Event {
     DoneEvent(Customer customer, List<Server> servers, int serverID, double eventStartTime) {
         super(customer, servers);
-        this.currentServer = ServerList.getServerByID(servers, serverID);
+        this.serverID = serverID;
         this.startTime = eventStartTime;
     }
 
     @Override
     public Event execute() {
+        // Get the currentServer from the ServerList using ID
+        Server currentServer = ServerList.getServerByID(this.servers, this.serverID);
+
         /*
          * Update current server on execute.
          * 
-         * This is the "someone in queue but not served yet" config
+         * When DoneEvent executes, the server will be updated from:
+         * 
+         * - "queueAvailable" to "available"
+         * 
+         * - "full" to "queueAvailable"
+         * 
+         * The time also increase
          */
-        this.currentServer = new Server(this.currentServer.identifier, false, this.currentServer.hasWaitingCustomer,
-                !this.currentServer.hasWaitingCustomer ? this.startTime : this.startTime + 1.0);
+        currentServer = new Server(currentServer.identifier, !currentServer.hasWaitingCustomer, false,
+                currentServer.hasWaitingCustomer ? currentServer.nextAvailableTime + 1.0
+                        : currentServer.nextAvailableTime);
 
         // Save updated server back into ServerList
-        ServerList.updateServer(this.servers, this.currentServer.identifier, this.currentServer);
+        ServerList.updateServer(this.servers, currentServer.identifier, currentServer);
 
         // Return null as DoneEvent is the last event in event transitions
         return null;
@@ -28,7 +38,6 @@ class DoneEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f %d done serving by %d", this.startTime, this.customer.customerID,
-                this.currentServer.identifier);
+        return String.format("%.3f %d done serving by %d", this.startTime, this.customer.customerID, this.serverID);
     }
 }

@@ -11,13 +11,13 @@ abstract class Event {
 
     // This value will be set in execute method, using the servers list, next
     // available time value
-    // @todo How to make this immutable?
-    //
+    // @todo How to make this immutable? --> Use a Setter trap, once value set and
+    // not null, not allowed to change it
     public double startTime;
 
-    // Field to hold a reference to the current server object.
-    // Set --> this.currentServer = ServerList.getServerByID(servers, serverID);
-    public Server currentServer;
+    // Field to hold the serverID of the server serving that Event subclass to get
+    // the currentServer object back from ServerList
+    public int serverID;
 
     Event(Customer customer, List<Server> servers) {
         this.customer = customer;
