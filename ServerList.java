@@ -21,14 +21,14 @@ class ServerList {
      * Return a server that is available using a Functional method
      */
     public static Server getNextAvailableServer(List<Server> serverList) {
-        return serverList.stream().filter(server -> server.status() == Server.Status.available).findAny().orElse(null);
+        return serverList.stream().filter(server -> server.status == Server.Status.available).findAny().orElse(null);
     }
 
     /**
      * Return server with an open spot in its Queue using a Functional method
      */
     public static Server getnextAvailableQueueServer(List<Server> serverList) {
-        return serverList.stream().filter(server -> server.status() == Server.Status.queueAvailable).findAny()
+        return serverList.stream().filter(server -> server.status == Server.Status.queueAvailable).findAny()
                 .orElse(null);
     }
 
