@@ -1,5 +1,5 @@
+package simulator;
 
-// package cs2030.simulator;
 import java.util.List;
 
 class WaitEvent extends Event {

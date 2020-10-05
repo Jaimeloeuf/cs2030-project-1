@@ -1,8 +1,8 @@
+package simulator;
 
-// package cs2030.simulator;
 import java.util.List;
 
-class LeaveEvent extends Event {
+public class LeaveEvent extends Event {
     /**
      * private field to ensure no one else but the internal methods can modify this
      * public getter available for this to give READ only access to external classes

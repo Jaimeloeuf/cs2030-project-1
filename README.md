@@ -2,9 +2,11 @@
 My attempt of this project. [Ques is a html page](./Ques)
 
 ## Build and run with
-javac *.java -d build;
-javac .\Main.java -d .\build\;
-java -cp .\build\ Main;
+```sh
+javac *.java -d ./build/;
+javac ./Main.java -d ./build/; # Only run this again if the only thing you modified is Main.java
+java -cp ./build/ Main;
+```
 
 ## Notes
 - execute updates the state of the servers, and returns a new event to be chained / added to queue to operate

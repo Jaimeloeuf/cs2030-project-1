@@ -1,8 +1,8 @@
+package simulator;
 
-// package cs2030.simulator;
 import java.util.List;
 
-class DoneEvent extends Event {
+public class DoneEvent extends Event {
     DoneEvent(Customer customer, List<Server> servers, int serverID, double eventStartTime) {
         super(customer, servers);
         this.serverID = serverID;

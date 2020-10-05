@@ -1,7 +1,7 @@
-//package cs2030.simulator;
+package simulator;
 
 // Immutable Server class
-class Server {
+public class Server {
     // All the possible states of the server
     public static enum Status {
         available, queueAvailable, full
@@ -32,7 +32,7 @@ class Server {
      *                           service (the time when server is able to serve the
      *                           next customer)
      */
-    Server(int identifier, boolean isAvailable, boolean hasWaitingCustomer, double nextAvailableTime) {
+    public Server(int identifier, boolean isAvailable, boolean hasWaitingCustomer, double nextAvailableTime) {
         this.identifier = identifier;
         this.isAvailable = isAvailable;
         this.hasWaitingCustomer = hasWaitingCustomer;

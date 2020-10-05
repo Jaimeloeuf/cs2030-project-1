@@ -1,7 +1,9 @@
+package simulator;
+
 import java.util.Comparator;
 
 // comparison that returns earlier event startTime as priority
-class Comparison implements Comparator<Event> {
+public class Comparison implements Comparator<Event> {
     @Override
     public int compare(Event a, Event b) {
 

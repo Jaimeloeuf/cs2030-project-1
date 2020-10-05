@@ -1,9 +1,9 @@
+package simulator;
 
-//package cs2030.simulator;
 import java.util.List;
 
-class ArriveEvent extends Event {
-    ArriveEvent(Customer customer, List<Server> servers) {
+public class ArriveEvent extends Event {
+    public ArriveEvent(Customer customer, List<Server> servers) {
         super(customer, servers);
         this.startTime = customer.arrivalTime;
     }

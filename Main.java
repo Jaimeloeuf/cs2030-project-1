@@ -1,8 +1,20 @@
+
+// Import classes from java packages
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Collections;
+
+// Import packages and classes from simulator package
+import simulator.Server;
+import simulator.Comparison;
+import simulator.Event;
+import simulator.ArriveEvent;
+import simulator.ServeEvent;
+import simulator.DoneEvent;
+import simulator.LeaveEvent;
+import simulator.Customer;
 
 class Main {
     public static void main(String[] args) {
